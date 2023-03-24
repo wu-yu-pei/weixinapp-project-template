@@ -1,0 +1,100 @@
+{
+    "pages" : [
+        {
+            "path" : "pages/index/index",
+            "style" : {
+                "navigationStyle" : "custom"
+            }
+        },
+		{
+            "path" : "pages/mine/mine",
+            "style" : {
+                "navigationStyle" : "custom"
+            }
+            
+        },
+		{
+            "path" : "pages/serviceCircle/serviceCircle",
+            "style" : {
+                "navigationStyle" : "custom"
+            }
+            
+        },
+		{
+		    "path" : "pages/friendCircle/friendCircle",
+		    "style" : {
+		        "navigationStyle" : "custom"
+		    }
+		    
+		}
+    ],
+	"subPackages": [
+		{
+			"root": "pages_sub/index",
+			"pages": [
+				{
+					"path": "zhengcehui/zhengcehui",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "qiyequan/qiyequan",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages_sub/mine",
+			"pages": [
+				{
+					"path": "wodefabu/wodefabu",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		}
+	],
+	"tabBar": {
+		"color": "#bcbdc4",
+		"borderStyle": "black",
+		"backgroundColor": "#fff",
+		"selectedColor": "#2e95ee",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/image/tabbar/home.png",
+				"selectedIconPath": "static/image/tabbar/home_adtive.png"
+			},
+			{
+				"pagePath": "pages/friendCircle/friendCircle",
+				"text": "企友圈",
+				"iconPath": "static/image/tabbar/serviceCircle.png",
+				"selectedIconPath": "static/image/tabbar/serviceCircle_active.png"
+			},
+			{
+				"pagePath": "pages/serviceCircle/serviceCircle",
+				"text": "服务圈",
+				"iconPath": "static/image/tabbar/serviceCircle.png",
+				"selectedIconPath": "static/image/tabbar/serviceCircle_active.png"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的",
+				"iconPath": "static/image/tabbar/mine.png",
+				"selectedIconPath": "static/image/tabbar/mine_active.png"
+			}
+		]
+	},
+    "globalStyle" : {
+        "navigationBarTextStyle" : "black",
+        "navigationBarTitleText" : "uni-app",
+        "navigationBarBackgroundColor" : "#FFF",
+        "backgroundColor" : "#FFF"
+    },
+    "uniIdRouter" : {}
+}
