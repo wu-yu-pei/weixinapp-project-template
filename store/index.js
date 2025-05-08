@@ -13,18 +13,21 @@ const store = new Vuex.Store({
 	// 全局state
     state () {
       return {
-        userInfo:uni.getStorageSync('userInfo') || {},
-	    token:uni.getStorageSync('token') || ''
+	    token: uni.getStorageSync('token') || ''
       }
     },
     getters:{
 	  
     },
     mutations: {
-    
+		SET_TOKEN(state, token) {
+			state.token = token
+		}
     },
     actions:{
-	  
+	  setToken({state, commit}, token) {
+		  commit('SET_TOKEN', token)
+	  }
     }
 })
 
