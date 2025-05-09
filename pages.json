@@ -11,7 +11,13 @@
         	"style" : {
                 "navigationStyle" : "custom"
             }
-        }
+        },
+		{
+			"path" : "pages/content/index",
+			"style" : {
+		        "navigationStyle" : "custom"
+		    }
+		}
     ],
 	"subPackages": [],
     "globalStyle" : {

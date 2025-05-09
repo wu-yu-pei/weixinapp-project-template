@@ -167,7 +167,7 @@ export default {
 	},
 	handleItemClick(item) {
 	  uni.navigateTo({
-		url: `/pages/detail/index?id=${item.id}`
+		url: `/pages/content/index?id=${item.id}`
 	  })
 	}
   }
