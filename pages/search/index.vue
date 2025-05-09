@@ -13,7 +13,7 @@
 			:key="index"
 			@click="handleItemClick(item)"
 		  >
-			<image class="item-image" :src="'http://8.141.63.127:7899' + item.image" mode="aspectFill" />
+			<image class="item-image" :src="'https://ad-api.wuyupei.top' + item.image" mode="aspectFill" />
 			<view class="item-content">
 			  <text class="item-title">{{ item.name }}</text>
 			  <text class="item-desc">{{ item.desc }}</text>

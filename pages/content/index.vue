@@ -6,17 +6,21 @@
 		<text class="nav-title" @click="backHome">HAPPY GET</text>
     </view>
 
-    <view class="detail-wrapper" v-if="detail">
-      <image class="cover-image" :src="'http://8.141.63.127:7899' + detail.image" mode="widthFix"></image>
-      <view class="title">{{ detail.name }}</view>
-      <view class="description">{{ detail.des }}</view>
-      <view class="meta">
-        <text class="views">👁️ {{ detail.viewCount }} 次浏览</text>
-        <text class="date">{{ formatDate(detail.createdAt) }}</text>
-      </view>
+	<view class="detail-wrapper" v-if="detail">
+	  <view class="card">
+		<image class="cover" :src="'https://ad-api.wuyupei.top' + detail.image" mode="aspectFill"></image>
+		<view class="info">
+		  <view class="title">{{ detail.name }}</view>
+		  <view class="description">{{ detail.des }}</view>
+		  <view class="meta">
+			<text class="views">👁️ {{ detail.viewCount }} 次浏览</text>
+			<text class="date">{{ formatDate(detail.createdAt) }}</text>
+		  </view>
+		</view>
+	  </view>
 
-	  <u-parse  v-if="detail.content" :content="detail.content"></u-parse>
-    </view>
+	  <u-parse v-if="detail.content" :content="detail.content"></u-parse>
+	</view>
   </view>
 </template>
 
@@ -58,14 +62,14 @@ export default {
     return {
       title: this.detail?.name || 'HAPPY GET',
       path: `/pages/content/index?id=${this.detail?.id}`,
-      imageUrl: 'http://8.141.63.127:7899' + this.detail?.image
+      imageUrl: 'https://ad-api.wuyupei.top' + this.detail?.image
     }
   },
   onShareTimeline() {
     return {
       title: this.detail?.name || 'HAPPY GET',
       query: `id=${this.detail?.id}`,
-      imageUrl: 'http://8.141.63.127:7899' + this.detail?.image
+      imageUrl: 'https://ad-api.wuyupei.top' + this.detail?.image
     }
   },
 }
@@ -95,34 +99,53 @@ export default {
   line-height: 44px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
-
 .detail-wrapper {
   padding: 20rpx;
 }
 
-.cover-image {
-  width: 100%;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
+.card {
+  display: flex;
+  background: #f9f9f9;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.cover {
+  width: 180rpx;
+  height: 180rpx;
+  flex-shrink: 0;
+  border-radius: 12rpx 0 0 12rpx;
+}
+
+.info {
+  padding: 20rpx;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .title {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: bold;
   margin-bottom: 10rpx;
+  color: #333;
 }
 
 .description {
   color: #666;
-  font-size: 28rpx;
-  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  margin-bottom: 10rpx;
+  line-height: 1.4;
 }
 
 .meta {
+  font-size: 22rpx;
+  color: #999;
   display: flex;
   justify-content: space-between;
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 30rpx;
 }
+
 </style>
