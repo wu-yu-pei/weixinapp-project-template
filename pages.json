@@ -17,6 +17,12 @@
 			"style" : {
 		        "navigationStyle" : "custom"
 		    }
+		},
+		{
+			"path" : "pages/scan/index",
+			"style" : {
+		        "navigationStyle" : "custom"
+		    }
 		}
     ],
 	"subPackages": [],

@@ -96,6 +96,27 @@ export default {
   	this.autoFocus = true;
   },
   onLoad(options) {
+	
+	// 广告相关
+	let interstitialAd = null
+	
+	if (wx.createInterstitialAd) {
+	  interstitialAd = wx.createInterstitialAd({
+	    adUnitId: 'adunit-504eec5e6c7c245a'
+	  })
+	  interstitialAd.onLoad(() => {})
+	  interstitialAd.onError((err) => {
+	    console.error('插屏广告加载失败', err)
+	  })
+	  interstitialAd.onClose(() => {})
+	}
+	
+	if (interstitialAd) {
+	  interstitialAd.show().catch((err) => {
+	    console.error('插屏广告显示失败', err)
+	  })
+	}
+	
     this.setStatusBarHeight()
     // 监听键盘高度变化
     uni.onKeyboardHeightChange(res => {

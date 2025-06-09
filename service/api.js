@@ -3,4 +3,5 @@ export default {
 	login: data => uni.$u.http.post('/wechat/login', data),
 	getCategory: data => uni.$u.http.get('/categories/list', { params: data }),
 	getDetail: (id) => uni.$u.http.get(`/categories/${id}`),
+	addIp: data => uni.$u.http.post('/add-ip', data),
 }

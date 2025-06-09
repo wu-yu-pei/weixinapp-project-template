@@ -22,8 +22,8 @@
             :style="{ animationDuration: line1Duration + 's' }"
           >
             <view class="marquee-content">
-              <view class="item" @click="goToSearch('掘金小册')">掘金小册</view>
-              <view class="item" @click="goToSearch('IT资源PPT')">IT资源视频</view>
+			  <view class="item" @click="goToSearch('苹果影视App')">苹果免费影视APP</view>
+              <view class="item" @click="goToSearch('PPT')">PPT</view>
             </view>
           </view>
           <view class="fade-mask"></view>
@@ -36,8 +36,8 @@
             :style="{ animationDuration: line2Duration + 's' }"
           >
             <view class="marquee-content">
-              <view class="item" @click="goToSearch('北京理工大学PPT')">北京理工大学PPT...</view>
-              <view class="item" @click="goToSearch('看广告得金币')">看广告得金币</view>
+              <view class="item" @click="goToSearch('PPT')">PPT</view>
+              <view class="item" @click="goToSearch('App')">苹果免费影视APP</view>
             </view>
           </view>
           <view class="fade-mask"></view>

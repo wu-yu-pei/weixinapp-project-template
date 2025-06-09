@@ -1,25 +1,20 @@
 <template>
   <view class="container">
     <!-- 自定义导航栏 -->
-    <view class="custom-nav" :style="{ paddingTop: statusBarHeight + 'px' }">
-		<u-icon name="home" color="#000" size="20" :bold="true"></u-icon @click="backHome">
+    <view class="custom-nav" :style="{ paddingTop: statusBarHeight + 'px', opacity: opacity2  }">
+		<u-icon name="home" color="#000" size="20" :bold="true" @click="backHome"></u-icon>
 		<text class="nav-title" @click="backHome">HAPPY GET</text>
     </view>
+	
+	<view class="custom-nav hidden" :style="{ paddingTop: statusBarHeight + 'px', opacity }">
+		<u-icon name="home" color="#000" size="20" :bold="true" @click="backHome"></u-icon>
+		<text class="nav-title" @click="backHome">{{detail.name}}</text>
+	</view>
 
 	<view class="detail-wrapper" v-if="detail">
-	  <view class="card">
-		<image class="cover" :src="'https://ad-api.wuyupei.top' + detail.image" mode="aspectFill"></image>
-		<view class="info">
-		  <view class="title">{{ detail.name }}</view>
-		  <view class="description">{{ detail.des }}</view>
-		  <view class="meta">
-			<text class="views">👁️ {{ detail.viewCount }} 次浏览</text>
-			<text class="date">{{ formatDate(detail.createdAt) }}</text>
-		  </view>
+		<view class="content">
+			<u-parse :content="detail.content"></u-parse>
 		</view>
-	  </view>
-
-	  <u-parse v-if="detail.content" :content="detail.content"></u-parse>
 	</view>
   </view>
 </template>
@@ -30,12 +25,42 @@ export default {
   data() {
     return {
       statusBarHeight: 0,
-      detail: null
+      detail: null,
+	  customNavHeight: 0,
+	  opacity: 0,
+	  opacity2: 1
     }
   },
   async onLoad(options) {
+	let interstitialAd = null
+	
+	// 在页面onLoad回调事件中创建插屏广告实例
+	if (wx.createInterstitialAd) {
+	  interstitialAd = wx.createInterstitialAd({
+	    adUnitId: 'adunit-504eec5e6c7c245a'
+	  })
+	  interstitialAd.onLoad(() => {})
+	  interstitialAd.onError((err) => {
+	    console.error('插屏广告加载失败', err)
+	  })
+	  interstitialAd.onClose(() => {})
+	}
+	
+	// 在适合的场景显示插屏广告
+	if (interstitialAd) {
+	  interstitialAd.show().catch((err) => {
+	    console.error('插屏广告显示失败', err)
+	  })
+	}
     this.setStatusBarHeight()
     await this.getDetailById(options.id)
+	
+	
+  },
+  onReady() {
+  	uni.createSelectorQuery().select('.custom-nav').boundingClientRect((data) => {
+		this.customNavHeight = data.height
+	}).exec()
   },
   methods: {
     setStatusBarHeight() {
@@ -53,6 +78,7 @@ export default {
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     },
 	backHome() {
+		console.log(111);
 		uni.redirectTo({
 			url: "/pages/index/index"
 		})
@@ -72,11 +98,16 @@ export default {
       imageUrl: 'https://ad-api.wuyupei.top' + this.detail?.image
     }
   },
+  onPageScroll(e) {
+	this.opacity =  (e.scrollTop * 2) / this.customNavHeight
+	this.opacity2 = e.scrollTop < 0 ? 1 : this.customNavHeight / (e.scrollTop * 10)
+  }
 }
 </script>
 
 <style lang="scss">
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -87,10 +118,27 @@ export default {
   display: flex;
   gap: 0 10rpx;
   background-color: #ffff00;
+  align-items: center;
   color: #000000;
   padding-bottom: 10px;
   padding-left: 10rpx;
+  position: relative;
+  z-index: 999;
 }
+
+.hidden{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #ffff00;
+}
+
+.custom-nav-image {
+	width: 30px;
+	height: 20px;
+}
+
 
 .nav-title {
   font-size: 18px;
@@ -99,53 +147,24 @@ export default {
   line-height: 44px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
 .detail-wrapper {
-  padding: 20rpx;
-}
-
-.card {
-  display: flex;
-  background: #f9f9f9;
-  border-radius: 16rpx;
-  overflow: hidden;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-}
-
-.cover {
-  width: 180rpx;
-  height: 180rpx;
-  flex-shrink: 0;
-  border-radius: 12rpx 0 0 12rpx;
-}
-
-.info {
-  padding: 20rpx;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	
 }
 
 .title {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 10rpx;
-  color: #333;
+	display: flex;
+	font-weight: bold;
+	font-size: 18px;
+	gap: 0 10rpx;
+	color: #00000f;
 }
 
-.description {
-  color: #666;
-  font-size: 26rpx;
-  margin-bottom: 10rpx;
-  line-height: 1.4;
+.title .u-icon {
+	z-index: 0;
 }
 
-.meta {
-  font-size: 22rpx;
-  color: #999;
-  display: flex;
-  justify-content: space-between;
+.content {
+	padding: 20rpx;
 }
-
 </style>
