@@ -28,9 +28,15 @@
 		</view>
 	</view>
 	
-	<view class="fotter" @click="showad">
-		<u-icon name="play-right-fill"></u-icon>
-		看广查看~
+	<view class="fotter" v-if="detail.id === 3 || detail.id >= 100">
+	
+		<view class="sub" @click="sub" v-if="detail.id === 3">
+			订阅更新
+		</view>
+		<view class="play-ad" @click="showad">
+			<u-icon name="play-right-fill"></u-icon>
+			看广查看~
+		</view>
 	</view>
   </view>
 </template>
@@ -107,10 +113,42 @@ export default {
 		})
 	},
 	sub() {
+		//漫路h
+		uni.login({
+		  success: res => {
+		    //code值(5分钟失效)
+		    console.info(res.code);
+		    //小程序appid
+		    let appid = 'wxfd9e4d0f7ffcdbf4'; //我瞎写的
+		    //小程序secret
+		    let secret = 'bc30c716ab966eca9c0af6b06dbc4e45'; //我瞎写的
+		    //wx接口路径
+		    let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + res.code + '&grant_type=authorization_code';
+		    uni.request({
+		      url: url, // 请求路径
+		      method: 'GET', //请求方式
+		      success: result => {
+		        //响应成功
+		        //这里就获取到了openid了
+				this.$api.postSub({ openid: result.data.openid })
+		        uni.setStorage({
+		          key:'user',
+		          data: result.data.openid
+		        })
+		      },
+		      fail: err => {} //失败
+		    });
+		  }
+		});
 		  wx.requestSubscribeMessage({
-			tmplIds: ['77W22ia2xoPss5padQtJIzSb-dmePOzkPWAihuSqPLo'],
+			tmplIds: ['teYPeM7IvJLJRTue1-C98AcUZSLzCCfoE--vX28aSrQ'],
 			success (res) {
-				console.log(res)
+				uni.showToast({
+					title:"订阅成功～"
+				})
+			},
+			fail(err) {
+				console.log(err)
 			}
 		  })
 	},
@@ -229,17 +267,43 @@ export default {
 	bottom: 0;
 	width: 100%;
 	padding: 30rpx;
-	height: 100rpx;
+	height: 150rpx;
 	border-top: 1px solid #ffff00;
-	background-color: #FFFF00;
+	gap: 0 10px;
+	background-color: #fff;
+	padding-bottom: 70rpx;
+}
+.sub {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	background-color: yellow;
+	height: 80rpx;
+	border-radius: 10rpx;
 	color: #000 !important;
 	font-size: 30rpx !important;
 	font-weight: 500;
 	letter-spacing: 10rpx;
 }
-.fotter:active {
+
+.play-ad{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	background-color: yellow;
+	height: 80rpx;
+	border-radius: 10rpx;
+	color: #000 !important;
+	font-size: 30rpx !important;
+	font-weight: 500;
+	letter-spacing: 10rpx;
+}
+.sub:active, .play-ad:active {
 	opacity: 0.8;
 }
+
 .link {
 	padding: 0 30rpx;
 	background-color:white;
