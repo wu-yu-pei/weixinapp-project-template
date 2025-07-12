@@ -5,7 +5,7 @@
 		<u-icon name="home" color="#000" size="20" :bold="true" @click="backHome"></u-icon>
 		<text class="nav-title" @click="backHome">HAPPY GET</text>
     </view>
-	
+
 	<view class="custom-nav hidden" :style="{ paddingTop: statusBarHeight + 'px', opacity }">
 		<u-icon name="home" color="#000" size="20" :bold="true" @click="backHome"></u-icon>
 		<text class="nav-title" @click="backHome">{{detail.name}}</text>
@@ -15,6 +15,22 @@
 		<view class="content">
 			<u-parse :content="detail.content"></u-parse>
 		</view>
+		
+		<view class="content" v-if="detail.id === 3 || detail.id >= 100">
+			<u-parse v-if="isLookEnd" :content="detail.linkContent"></u-parse>
+			<view v-else class="link">
+				<view class="link-title" >链接 </view> <br />
+				<view class="lock">
+					<u-icon name="close-circle" size="30" color="#515767"></u-icon>
+					点击下方按钮 解锁～
+				</view>
+			</view>
+		</view>
+	</view>
+	
+	<view class="fotter" @click="showad">
+		<u-icon name="play-right-fill"></u-icon>
+		看广查看~
 	</view>
   </view>
 </template>
@@ -28,34 +44,41 @@ export default {
       detail: null,
 	  customNavHeight: 0,
 	  opacity: 0,
-	  opacity2: 1
+	  opacity2: 1,
+	  videoAd: null,
+	  isLookEnd: false
     }
   },
   async onLoad(options) {
-	let interstitialAd = null
-	
-	// 在页面onLoad回调事件中创建插屏广告实例
-	if (wx.createInterstitialAd) {
-	  interstitialAd = wx.createInterstitialAd({
-	    adUnitId: 'adunit-504eec5e6c7c245a'
+	// 在页面onLoad回调事件中创建激励视频广告实例
+	if (wx.createRewardedVideoAd) {
+	  this.videoAd = wx.createRewardedVideoAd({
+		adUnitId: 'adunit-487ba8820fc3e91a'
 	  })
-	  interstitialAd.onLoad(() => {})
-	  interstitialAd.onError((err) => {
-	    console.error('插屏广告加载失败', err)
+	  this.videoAd.onLoad(() => {})
+	  this.videoAd.onError((err) => {
+		console.error('激励视频光告加载失败', err)
 	  })
-	  interstitialAd.onClose(() => {})
+	  this.videoAd.onClose((res) => {
+		  // 用户点击了【关闭广告】按钮
+		  if (res && res.isEnded) {
+		    // 正常播放结束，可以下发游戏奖励
+			this.isLookEnd = true
+		  } else {
+		    // 播放中途退出，不下发游戏奖励
+			uni.showToast({
+				icon:'none',
+				title: '完整观看广告后才可以查看哦 ～'
+			});
+		  }
+	  })
 	}
+
 	
-	// 在适合的场景显示插屏广告
-	if (interstitialAd) {
-	  interstitialAd.show().catch((err) => {
-	    console.error('插屏广告显示失败', err)
-	  })
-	}
     this.setStatusBarHeight()
     await this.getDetailById(options.id)
-	
-	
+
+
   },
   onReady() {
   	uni.createSelectorQuery().select('.custom-nav').boundingClientRect((data) => {
@@ -82,6 +105,27 @@ export default {
 		uni.redirectTo({
 			url: "/pages/index/index"
 		})
+	},
+	sub() {
+		  wx.requestSubscribeMessage({
+			tmplIds: ['77W22ia2xoPss5padQtJIzSb-dmePOzkPWAihuSqPLo'],
+			success (res) {
+				console.log(res)
+			}
+		  })
+	},
+	showad() {
+		// 用户触发广告后，显示激励视频广告
+		if (this.videoAd) {
+		  this.videoAd.show().catch(() => {
+			// 失败重试
+			this.videoAd.load()
+			  .then(() => this.videoAd.show())
+			  .catch(err => {
+				console.error('激励视频 广告显示失败', err)
+			  })
+		  })
+		}
 	}
   },
   onShareAppMessage() {
@@ -149,7 +193,8 @@ export default {
 }
 
 .detail-wrapper {
-	
+	flex: 1;
+	padding-bottom: 150rpx;
 }
 
 .title {
@@ -166,5 +211,55 @@ export default {
 
 .content {
 	padding: 20rpx;
+}
+
+.more {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 28rpx;
+	color: #8a919f;
+}
+
+.fotter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 30rpx;
+	height: 100rpx;
+	border-top: 1px solid #ffff00;
+	background-color: #FFFF00;
+	color: #000 !important;
+	font-size: 30rpx !important;
+	font-weight: 500;
+	letter-spacing: 10rpx;
+}
+.fotter:active {
+	opacity: 0.8;
+}
+.link {
+	padding: 0 30rpx;
+	background-color:white;
+	border-radius:6px;
+	padding:15px;
+	box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+
+.link-title {
+	color: #515767;
+	font-weight: 500;
+}
+.lock {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 30rpx 0;
+	font-size: 30rpx !important;
+	gap: 20rpx 0;
+	color: #515767;
 }
 </style>
